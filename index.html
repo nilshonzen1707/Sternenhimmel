@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -8,11 +7,10 @@
   <style>
     body {
       margin: 0;
-      height: 100vh;
       background: radial-gradient(ellipse at center, #001022 0%, #000011 70%);
-      overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: white;
+      overflow-x: hidden;
     }
 
     header {
@@ -41,13 +39,10 @@
     }
 
     #sky {
-      position: absolute;
+      position: relative;
       top: 120px;
-      left: 0;
-      width: 100vw;
+      width: 100%;
       height: calc(100vh - 200px);
-      z-index: 10;
-      pointer-events: none;
     }
 
     .star-wrapper {
@@ -66,15 +61,13 @@
         0 0 10px 4px rgba(108, 160, 255, 0.6);
       border: 1.5px solid #9fcfff;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      color: transparent;
-      display: inline-block;
-      animation: pulse 2.5s infinite ease-in-out;
+      transition: transform 0.3s ease;
       clip-path: polygon(
         50% 0%, 61% 35%, 98% 35%, 68% 57%,
         79% 91%, 50% 70%, 21% 91%, 32% 57%,
         2% 35%, 39% 35%
       );
+      animation: pulse 2.5s infinite ease-in-out;
     }
 
     @keyframes pulse {
@@ -147,7 +140,7 @@
 <audio id="audio-player" controls></audio>
 
 <script>
-  const startDate = new Date(2025, 6, 23); // Juli ist Monat 6 (nullbasiert)
+  const startDate = new Date(2025, 6, 23); // Monat 6 = Juli
   const todayRaw = new Date();
   const today = new Date(todayRaw.getFullYear(), todayRaw.getMonth(), todayRaw.getDate());
   const diffTime = today.getTime() - startDate.getTime();
@@ -178,14 +171,14 @@
     const dx = x1 - x2;
     const dy = y1 - y2;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    return distance < (r1 + r2 + 6);
+    return distance < (r1 + r2 + 8);
   }
 
   function findPosition(sizePx, existingStars) {
     const maxAttempts = 100;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const x = window.innerWidth * (0.1 + Math.random() * 0.8);
-      const y = (window.innerHeight - 240) * (0.05 + Math.random() * 0.9) + 120;
+      const y = (window.innerHeight - 260) * (0.05 + Math.random() * 0.85) + 120;
       const r = sizePx / 2;
       const collision = existingStars.some(star => circlesOverlap(x, y, r, star.x, star.y, star.radius));
       if (!collision) {
@@ -202,7 +195,7 @@
     const sizePx = sizeMap[sizeClass];
     const pos = findPosition(sizePx, placedStars);
 
-    placedStars.push({ x: pos.x, y: pos.y, radius: sizePx / 2 + 4 });
+    placedStars.push({ x: pos.x, y: pos.y, radius: sizePx / 2 + 5 });
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('star-wrapper');
