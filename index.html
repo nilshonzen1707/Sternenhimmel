@@ -1,127 +1,122 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sternenhimmel</title>
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: radial-gradient(ellipse at center, #001022 0%, #000011 70%);
-    overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sternenhimmel</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, #001022 0%, #000011 70%);
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+    }
 
-  header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 15px 30px;
-    background: rgba(0, 10, 34, 0.85);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-    z-index: 1000;
-    user-select: none;
-  }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 15px 30px;
+      background: rgba(0, 10, 34, 0.85);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      z-index: 1000;
+    }
 
-  header h1 {
-    margin: 0 0 6px 0;
-    font-weight: 700;
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-  }
+    header h1 {
+      margin: 0 0 6px 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
 
-  header p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.3;
-    color: #b0c8e0;
-  }
+    header p {
+      margin: 0;
+      font-size: 1rem;
+      color: #b0c8e0;
+    }
 
-  #sky {
-    position: absolute;
-    top: 90px; /* genug Abstand, damit Header nicht überlappt */
-    left: 0;
-    width: 100vw;
-    height: calc(100vh - 90px);
-    z-index: 10;
-    pointer-events: none; /* Damit Sterne nur die Buttons reagieren, nicht der Container */
-  }
+    #sky {
+      position: absolute;
+      top: 90px;
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 90px);
+      z-index: 10;
+      pointer-events: none;
+    }
 
-  .star-wrapper {
-    position: absolute;
-    text-align: center;
-    transform: translate(-50%, -50%);
-    user-select: none;
-    pointer-events: auto; /* Buttons bleiben klickbar */
-  }
+    .star-wrapper {
+      position: absolute;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      user-select: none;
+      pointer-events: auto;
+    }
 
-  .star {
-    background: radial-gradient(circle, #e0f7ff, #6ca0ff 80%);
-    border-radius: 50%;
-    box-shadow:
-      0 0 6px 2px rgba(108, 160, 255, 0.8),
-      0 0 10px 4px rgba(108, 160, 255, 0.6);
-    border: 1.5px solid #9fcfff;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: transparent;
-    display: inline-block;
-  }
+    .star {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: inline-block;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
 
-  .star.size1 {
-    width: 12px;
-    height: 12px;
-  }
+    .star.disabled {
+      opacity: 0.2;
+      filter: grayscale(100%);
+      animation: none;
+      cursor: default;
+      pointer-events: none;
+    }
 
-  .star.size2 {
-    width: 18px;
-    height: 18px;
-  }
+    .star svg {
+      width: 24px;
+      height: 24px;
+      fill: #9fcfff;
+      filter: drop-shadow(0 0 6px #6ca0ff);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
 
-  .star.size3 {
-    width: 24px;
-    height: 24px;
-  }
+    .star:hover:not(.disabled) svg {
+      transform: scale(1.5);
+      filter: drop-shadow(0 0 10px #a0cfff) drop-shadow(0 0 18px #6ca0ff);
+    }
 
-  .star:hover:not(.disabled) {
-    transform: scale(1.5);
-    box-shadow:
-      0 0 12px 5px rgba(108, 160, 255, 1),
-      0 0 20px 8px rgba(108, 160, 255, 0.8);
-  }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 6px #6ca0ff);
+      }
+      50% {
+        transform: scale(1.25);
+        filter: drop-shadow(0 0 12px #a0cfff);
+      }
+    }
 
-  .star.disabled {
-    opacity: 0.25;
-    pointer-events: none;
-    filter: grayscale(100%);
-    cursor: default;
-    box-shadow: none;
-    background: #333;
-  }
+    .star-label {
+      margin-top: 6px;
+      font-size: 0.65rem;
+      color: #a0b8d9;
+      text-shadow: 0 0 3px #112233;
+      user-select: none;
+      display: block;
+    }
 
-  .star-label {
-    margin-top: 6px;
-    font-size: 0.65rem;
-    color: #a0b8d9;
-    text-shadow: 0 0 3px #112233;
-    user-select: none;
-  }
-
-  audio#audio-player {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 320px;
-    background: #000a20;
-    border-radius: 6px;
-    box-shadow: 0 0 10px #3a72f5;
-    z-index: 1000;
-  }
-</style>
+    audio#audio-player {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      background: #000a20;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #3a72f5;
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
 
@@ -146,19 +141,8 @@
   const sky = document.getElementById('sky');
   const player = document.getElementById('audio-player');
 
-  const sizeMap = {
-    size1: 12,
-    size2: 18,
-    size3: 24
-  };
-
-  function randomSize() {
-    const sizes = ['size1', 'size2', 'size3'];
-    return sizes[Math.floor(Math.random() * sizes.length)];
-  }
-
   function dateForDay(day) {
-    const date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + day -1);
+    const date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + day - 1);
     const d = date.getDate().toString().padStart(2, '0');
     const m = (date.getMonth() + 1).toString().padStart(2, '0');
     return `${d}.${m}.`;
@@ -167,21 +151,21 @@
   function circlesOverlap(x1, y1, r1, x2, y2, r2) {
     const dx = x1 - x2;
     const dy = y1 - y2;
-    const distance = Math.sqrt(dx*dx + dy*dy);
-    return distance < (r1 + r2 + 4);
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < (r1 + r2 + 8);
   }
 
   function findPosition(sizePx, existingStars) {
     const maxAttempts = 100;
-    for(let attempt = 0; attempt < maxAttempts; attempt++) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const x = window.innerWidth * (0.1 + Math.random() * 0.8);
-      const y = (window.innerHeight - 90) * (0.05 + Math.random() * 0.9) + 90; // Abstand oben wegen Header
+      const y = (window.innerHeight - 90) * (0.05 + Math.random() * 0.9) + 90;
       const r = sizePx / 2;
       const collision = existingStars.some(star => {
         return circlesOverlap(x, y, r, star.x, star.y, star.radius);
       });
-      if(!collision) {
-        return {x, y};
+      if (!collision) {
+        return { x, y };
       }
     }
     return {
@@ -192,12 +176,11 @@
 
   const placedStars = [];
 
-  for(let day = 1; day <= 24; day++) {
-    const sizeClass = randomSize();
-    const sizePx = sizeMap[sizeClass];
+  for (let day = 1; day <= 24; day++) {
+    const sizePx = 24;
     const pos = findPosition(sizePx, placedStars);
 
-    placedStars.push({x: pos.x, y: pos.y, radius: sizePx / 2 + 4});
+    placedStars.push({ x: pos.x, y: pos.y, radius: sizePx / 2 + 4 });
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('star-wrapper');
@@ -206,22 +189,25 @@
     wrapper.dataset.day = day;
 
     const starBtn = document.createElement('button');
-    starBtn.classList.add('star', sizeClass);
-    starBtn.dataset.audio = day;
-    starBtn.textContent = '';
+    starBtn.classList.add('star');
+    if (day > diffDays) {
+      starBtn.classList.add('disabled');
+    } else {
+      starBtn.addEventListener('click', () => {
+        player.src = `audio/${day}.m4a`;
+        player.play();
+      });
+    }
+
+    starBtn.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+      </svg>
+    `;
 
     const label = document.createElement('span');
     label.classList.add('star-label');
     label.textContent = dateForDay(day);
-
-    if(day > diffDays) {
-      starBtn.classList.add('disabled');
-    } else {
-      starBtn.addEventListener('click', () => {
-        player.src = `audio/${day}.mp3`;
-        player.play();
-      });
-    }
 
     wrapper.appendChild(starBtn);
     wrapper.appendChild(label);
